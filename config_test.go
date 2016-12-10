@@ -17,6 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v2"
+	"log/syslog"
 )
 
 func testConfigLogger(conf string) (log15.Logger, error) {
@@ -81,6 +82,16 @@ func givenHostAvailable(host string, t *testing.T) {
 		t.Skipf("can't resolve host '%v'", host)
 	}
 }
+
+// givenLocalSyslogAvailable skips if local syslog is not available
+func givenLocalSyslogAvailable(t *testing.T) {
+
+	_,err:=log15.SyslogHandler(syslog.LOG_LOCAL6,"test",log15.LogfmtFormat())
+	if err != nil{
+		t.Skip("no local syslog available")
+	}
+}
+
 
 func TestReadSimpleConfig(t *testing.T) {
 	t.Parallel()

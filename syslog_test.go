@@ -59,7 +59,8 @@ func TestFacility(t *testing.T) {
 }
 
 func TestSyslogConfig(t *testing.T) {
-	t.Parallel()
+
+	givenLocalSyslogAvailable(t)
 
 	require := require.New(t)
 

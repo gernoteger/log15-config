@@ -1,6 +1,6 @@
-[![GoDoc](https://godoc.org/github.com/gernoteger/mapstructure-hooks?status.svg)](https://godoc.org/github.com/gernoteger/log15-config)
-[![Go Report Card](https://goreportcard.com/badge/gernoteger/mapstructure-hooks)](https://goreportcard.com/report/gernoteger/log15-config)
-[![Build Status](https://travis-ci.org/inconshreveable/log15.svg?branch=master)](https://travis-ci.org/gernoteger/log15-config)
+[![GoDoc](https://godoc.org/github.com/gernoteger/log15-config?status.svg)](https://godoc.org/github.com/gernoteger/log15-config)
+[![Go Report Card](https://goreportcard.com/badge/gernoteger/log15-config)](https://goreportcard.com/report/gernoteger/log15-config)
+[![Build Status](https://travis-ci.org/gernoteger/log15-config.svg?branch=master)](https://travis-ci.org/gernoteger/log15-config)
 
 # About 
 
@@ -86,7 +86,7 @@ one of "terminal","json","logfmt"
 
 # Add new Handlers
 
-This is accomplished with the help of (mapstructure-hooks)[https://]github.com/gernoteger/mapstructure-hooks]. You need:
+This is accomplished with the help of (mapstructure-hooks)[https://github.com/gernoteger/mapstructure-hooks]. You need:
 
 1. A struct that will hold your config and implements HandlerConfig. Use LevelHandlerConfig for proper level handling.
 
@@ -113,3 +113,6 @@ add to config/handler.go:
 ```go
 hooks.Register(HandlerConfigType, "gelf", NewGelfConfig)
 ```
+# License
+
+Licensed under [Apache 2.0 License](LICENSE.md)

@@ -51,6 +51,9 @@ func AddFormat(key string, newFunc NewFormatFunc) {
 
 func (f Fmt) NewFormat() log15.Format {
 
+	if f == "" {
+		f = "logfmt" // default
+	}
 	newFmt, ok := formats[string(f)]
 	if !ok {
 		err := fmt.Errorf("unknown format: '%v'", f)

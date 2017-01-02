@@ -75,7 +75,6 @@ func (c *StreamConfig) NewHandler() (log15.Handler, error) {
 	}
 
 	log := log15.StreamHandler(f, c.Format.NewFormat())
-	//TODO: use level
 
 	return log, nil
 }

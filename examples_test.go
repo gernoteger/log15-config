@@ -109,7 +109,6 @@ func Example() {
 	time.Sleep(100 * time.Millisecond) // need this to finish all async log messages. Bufferedhandler doesn't expose a means to see if the channel is closed...
 
 	// disabling output below for tests by immediately prepending this line since dates will never be right. to execute, just insert blank line after this ons.
-
 	// Output:
 	// INFO[11-30|11:37:20] Hello, world!                            mark=test user=alice
 	// t=2016-11-30T11:37:20+0100 lvl=info msg="Hello, world!" mark=test user=alice

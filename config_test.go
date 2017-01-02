@@ -246,10 +246,10 @@ func TestBufferedTcpNetHandler(t *testing.T) {
 	}
 
 	config := fmt.Sprintf(`
-  level: Info
+  level: info
   handlers:
     - kind: buffer
-      level: debug # w/o this, the nested handler(s) won't be activated!!
+      level: debug # w/o this, the nested (debug) handler(s) would be filtered by the default level
       bufsize: 10
       handler:
         kind: net

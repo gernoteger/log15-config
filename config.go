@@ -34,6 +34,7 @@ func (c *LoggerConfig) NewLogger() (log15.Logger, error) {
 		if hc == nil {
 			return nil, fmt.Errorf("nil handler")
 		}
+
 		h, err := hc.NewHandler()
 		if err != nil {
 			return nil, err

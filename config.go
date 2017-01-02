@@ -14,12 +14,16 @@ type LoggerConfig struct {
 	Level    string
 	Handlers []HandlerConfig
 
+	// if > 0 we buffer the logs. Defaults to 100 for short bursts
+	BufSize int
+
 	// extra fields to be added
 	//Extra map[string]interface{}
 	Extra log15.Ctx
 }
 
 // NewLogger produces a new logger from a configuration
+// TODO: candidate for function!
 func (c *LoggerConfig) NewLogger() (log15.Logger, error) {
 	var handlers []log15.Handler
 
@@ -53,6 +57,10 @@ func (c *LoggerConfig) NewLogger() (log15.Logger, error) {
 	}
 
 	hall := log15.MultiHandler(handlers...)
+
+	if c.BufSize > 0 {
+		hall = log15.BufferedHandler(c.BufSize, hall)
+	}
 
 	l := log15.New(c.Extra)
 	l.SetHandler(hall)

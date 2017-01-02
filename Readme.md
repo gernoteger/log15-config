@@ -2,7 +2,7 @@
 [![Go Report Card](https://goreportcard.com/badge/gernoteger/log15-config)](https://goreportcard.com/report/gernoteger/log15-config)
 [![Build Status](https://travis-ci.org/gernoteger/log15-config.svg?branch=master)](https://travis-ci.org/gernoteger/log15-config)
 
-# About 
+# Abstract 
 
 Package log15-config enables configuration of log15 from some arbitrary maps. It does not read any config files, you can use 
 your favourite way of configuring your application.
@@ -11,7 +11,8 @@ Handlers and Loggers from this configuration.
 
 # Usage
 
-See this example. Detailled examples for all Handlers can be found in the tests.
+See this example. Detailed examples for all Handlers can be found in the tests. Also please check log15's documentation
+for the behaviour of the individual handlers.
 
 ```go
 func getMapFromConfiguration(config string) (map[string]interface{}, error) {
@@ -62,6 +63,8 @@ func Example() {
 }
 ```
 
+[Look at the Examples for more handler configurations](https://godoc.org/github.com/gernoteger/log15-config#example-package)
+
 The kinds for the Handlers are:
 
 * stdout: StreamHandler to os.Stdout
@@ -70,23 +73,23 @@ The kinds for the Handlers are:
 * stderr: StreamHandler to os.Stderr
     - format: see Formats below
     
-* file: Fileandler to a file
+* file: FileHandler to a file
     - format: see Formats below
     - path: path to file
 
-not yet implemented:
-
-* net
-* syslog
-* syslog_net
-
+* syslog. SyslogHandler
+    - tag: testing
+    - facility: local6
+    
+also implemented: MatchFilterHandler, MultiHandler, BufferedHandler,FailoverHandler
+  
 ## Format: 
 
-one of "terminal","json","logfmt"
+one of "terminal","json","logfmt" or a key of a custom format [as shown below](#formats)
 
-# Add new Handlers
+# Adding a Handler
 
-This is accomplished with the help of (mapstructure-hooks)[https://github.com/gernoteger/mapstructure-hooks]. You need:
+This is accomplished with the help of [mapstructure-hooks](https://github.com/gernoteger/mapstructure-hooks). You need:
 
 1. A struct that will hold your config and implements HandlerConfig. Use LevelHandlerConfig for proper level handling.
 
@@ -108,11 +111,26 @@ func NewAwesomeHandlerConfig() interface{}{
 
 3. Register from init() function
 
-add to config/handler.go:
+add to config/handler.go's Init():
 
 ```go
 hooks.Register(HandlerConfigType, "gelf", NewGelfConfig)
 ```
+
+# Adding a Format
+<a name="formats"></a>
+
+Register the format with AddFormat:
+
+```go
+	// add the testingformat to the options
+	config.AddFormat("test", func() log15.Format {
+		//excludes := []string{"called", "testing", "testrun"}
+		excludes := []string{}
+		return TerminalTestFormat(excludes)
+	})
+```
+
 # License
 
 Licensed under [Apache 2.0 License](LICENSE.md)

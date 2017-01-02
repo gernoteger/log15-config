@@ -13,11 +13,12 @@ import (
 
 	"net"
 
+	"log/syslog"
+
 	"github.com/inconshreveable/log15"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v2"
-	"log/syslog"
 )
 
 func testConfigLogger(conf string) (log15.Logger, error) {
@@ -86,12 +87,11 @@ func givenHostAvailable(host string, t *testing.T) {
 // givenLocalSyslogAvailable skips if local syslog is not available
 func givenLocalSyslogAvailable(t *testing.T) {
 
-	_,err:=log15.SyslogHandler(syslog.LOG_LOCAL6,"test",log15.LogfmtFormat())
-	if err != nil{
+	_, err := log15.SyslogHandler(syslog.LOG_LOCAL6, "test", log15.LogfmtFormat())
+	if err != nil {
 		t.Skip("no local syslog available")
 	}
 }
-
 
 func TestReadSimpleConfig(t *testing.T) {
 	t.Parallel()
@@ -250,6 +250,7 @@ func TestBufferedTcpNetHandler(t *testing.T) {
   handlers:
     - kind: buffer
       level: debug # w/o this, the nested handler(s) won't be activated!!
+      bufsize: 10
       handler:
         kind: net
         url: %v://%v

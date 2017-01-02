@@ -2,54 +2,60 @@ package config
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/inconshreveable/log15"
 )
 
-type Fmt int
+type Fmt string
 
-// GLEF is not a  format, it's a handler!!
-const (
-	FmtTerminal Fmt = iota
-	FmtJson
-	FmtLogfmt
-)
+// NewFormatFunc creates a new format
+type NewFormatFunc func() log15.Format
 
-// Returns the appropriate Lvl from a string name.
-// Useful for parsing command line args and configuration files.
-func FmtFromString(fmtString string) (Fmt, error) {
-	switch strings.ToLower(fmtString) {
-	case "terminal", "term", "console":
-		return FmtTerminal, nil
-	case "json":
-		return FmtJson, nil
-	case "logfmt":
-		return FmtLogfmt, nil
-	default:
-		return FmtTerminal, fmt.Errorf("Unknown format: %v", fmtString)
-	}
+var formats = map[string]func() log15.Format{
+	"terminal": log15.TerminalFormat,
+	"json":     log15.JsonFormat,
+	"logfmt":   log15.LogfmtFormat,
 }
 
-// UnmarshalString to implement StringUnmarshaller
-func (f Fmt) UnmarshalString(from string) (interface{}, error) {
-	f1, err := FmtFromString(from)
-	if err != nil {
-		return nil, err
-	}
-
-	return f1, nil
+// AddFormat adds a Format to the list. You can even replace the old ones!!
+func AddFormat(key string, newFunc NewFormatFunc) {
+	formats[key] = newFunc
 }
+
+//
+//
+//// FmtFromString returns the appropriate format string or errors out if unknown
+//func FmtFromString(fmtString string) (Fmt, error) {
+//
+//	switch strings.ToLower(fmtString) {
+//	case "terminal", "term", "console":
+//		return FmtTerminal, nil
+//	case "json":
+//		return FmtJson, nil
+//	case "logfmt":
+//		return FmtLogfmt, nil
+//	default:
+//		return FmtTerminal, fmt.Errorf("Unknown format: %v", fmtString)
+//	}
+//}
+//
+//// UnmarshalString to implement StringUnmarshaller
+//func (f Fmt) UnmarshalString(from string) (interface{}, error) {
+//	f1, err := FmtFromString(from)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	return f1, nil
+//}
 
 func (f Fmt) NewFormat() log15.Format {
-	switch f {
-	case FmtTerminal:
-		return log15.TerminalFormat()
-	case FmtJson:
-		return log15.JsonFormat()
-	case FmtLogfmt:
-		return log15.LogfmtFormat()
-	default:
-		panic("invalid format: ")
+
+	newFmt, ok := formats[string(f)]
+	if !ok {
+		err := fmt.Errorf("unknown format: '%v'", f)
+		panic(err) //TODO: return errors??
 	}
+
+	return newFmt()
 }

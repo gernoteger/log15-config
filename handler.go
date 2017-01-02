@@ -164,7 +164,7 @@ func (c *BufferConfig) NewHandler() (log15.Handler, error) {
 
 // ---- MultiHandler
 
-// MultiHandler fans out ot all handlers
+// MultiHandler fans out to all handlers
 type MultiConfig struct {
 	LevelHandlerConfig `mapstructure:",squash"`
 	Handlers           []HandlerConfig

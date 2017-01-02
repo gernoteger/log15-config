@@ -28,6 +28,7 @@ func Example() {
 	var exampleConfiguration = `
   # default for all handlers
   level: INFO
+  bufsize: 100  # buffer up to 100 messages before blocking
   extra:
       mark: test
       user: alice
